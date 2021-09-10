@@ -2,6 +2,7 @@ package de.janka.capstonedrazen.model;
 
 import de.janka.capstonedrazen.SpringBootTests;
 import de.janka.capstonedrazen.repo.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -16,6 +17,11 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserEntityTest extends SpringBootTests {
+
+    @AfterEach
+    public void clearDb() {
+        userRepository.deleteAll();
+    }
 
     @Resource
     private UserRepository userRepository;
@@ -50,6 +56,7 @@ public class UserEntityTest extends SpringBootTests {
     }
 
     @Test
+    @Transactional
     public void testUserContainsName() {
         // GIVEN
         UserEntity userEntity = new UserEntity();
