@@ -9,18 +9,16 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.EntityExistsException;
 
 import java.util.Optional;
 
 import static de.janka.capstonedrazen.controller.UserController.USER_CONTROLLER_TAG;
 import static javax.servlet.http.HttpServletResponse.*;
-import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -34,11 +32,14 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @CrossOrigin
 @RestController
 @RequestMapping("/user")
+@Getter
+@Setter
 public class UserController {
 
     public static final String USER_CONTROLLER_TAG = "User";
 
     private UserService userService;
+
 
     @Autowired
     public UserController(UserService userService) {
@@ -51,15 +52,11 @@ public class UserController {
             @ApiResponse(code = SC_CONFLICT, message = "Unable to create User, user already exists")
     })
     public ResponseEntity<User> create(@RequestBody User user) {
-        try {
-            UserEntity createdUserEntity = userService.create(user.getUserName());
+
+            UserEntity createdUserEntity = userService.create(user);
             User createdUser = map(createdUserEntity);
             return ok(createdUser);
-        }catch (IllegalArgumentException e) {
-            return badRequest().build();
-        } catch(EntityExistsException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+
     }
 
 
@@ -82,7 +79,6 @@ public class UserController {
     private User map(UserEntity userEntity) {
         return User.builder()
                 .userName(userEntity.getUserName())
-                .role(userEntity.getRole())
                 .build();
     }
 

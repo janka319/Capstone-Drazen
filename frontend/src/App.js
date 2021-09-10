@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Welcome from './pages/Welcome'
-import Settings from './pages/Settings'
+import Settings from './pages/Login'
 
 export default function App() {
   return (
