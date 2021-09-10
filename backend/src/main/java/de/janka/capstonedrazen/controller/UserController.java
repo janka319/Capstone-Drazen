@@ -46,7 +46,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(code = SC_BAD_REQUEST, message = "Unable to create User with blank name"),
             @ApiResponse(code = SC_CONFLICT, message = "Unable to create User, user already exists")
@@ -79,6 +79,7 @@ public class UserController {
     private User map(UserEntity userEntity) {
         return User.builder()
                 .userName(userEntity.getUserName())
+                .password(userEntity.getPassword())
                 .build();
     }
 
