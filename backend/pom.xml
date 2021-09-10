@@ -67,7 +67,32 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!-- Security -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>heroku</id>
+            <properties>
+                <spring.profiles.active>heroku</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
+
 
     <build>
         <plugins>
