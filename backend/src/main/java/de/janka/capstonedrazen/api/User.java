@@ -15,6 +15,6 @@ public class User {
     @ApiModelProperty(required = true, example = "John Doe", notes = "The name of the user")
     private String userName;
 
-    private String role;
+    private String password;
 
 }
