@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -48,5 +49,9 @@ public class UserService {
 
     public Optional<UserEntity> find(String userName) {
         return userRepository.findByUserName(userName);
+    }
+
+    public List<UserEntity> findAll() {
+        return userRepository.findAll();
     }
 }

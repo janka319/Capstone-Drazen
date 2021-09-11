@@ -15,7 +15,12 @@ spring:
     properties:
       hibernate:
         format_sql: false
+  security:
+    user:
+      name: admin
+      password: minda
 
 server:
   servlet:
     context-path: "/api/${spring.application.name}"
+

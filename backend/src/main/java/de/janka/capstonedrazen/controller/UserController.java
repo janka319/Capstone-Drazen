@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import static de.janka.capstonedrazen.controller.UserController.USER_CONTROLLER_TAG;
@@ -74,13 +76,34 @@ public class UserController {
             return ResponseEntity.notFound().build();
     }
 
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = SC_NO_CONTENT, message = "No users found")
+    })
+    public ResponseEntity<List<User>> findAll() {
+        List<UserEntity> userEntities = userService.findAll();
+        if (userEntities.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
 
+        List<User> users = map(userEntities);
+        return ok(users);
+    }
 
     private User map(UserEntity userEntity) {
         return User.builder()
                 .userName(userEntity.getUserName())
                 .password(userEntity.getPassword())
                 .build();
+    }
+
+    private List<User> map(List<UserEntity> userEntities) {
+        List<User> users = new LinkedList<>();
+        for (UserEntity userEntity : userEntities) {
+            User user = map(userEntity);
+            users.add(user);
+        }
+        return users;
     }
 
 
