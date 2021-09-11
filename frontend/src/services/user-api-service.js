@@ -1,13 +1,7 @@
 import axios from 'axios'
 
-export const getToken = credentials =>
+export const createUser = credentials => {
   axios
-    .post('api/capstoneDrazen/auth/token', credentials)
+    .post('/api/capstoneDrazen/user/create', credentials)
     .then(response => response.data)
-    .then(dto => dto.token)
-
-const headers = token => ({
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-})
+}
