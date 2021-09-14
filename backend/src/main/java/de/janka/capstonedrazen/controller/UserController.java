@@ -93,7 +93,6 @@ public class UserController {
     private User map(UserEntity userEntity) {
         return User.builder()
                 .userName(userEntity.getUserName())
-                .password(userEntity.getPassword())
                 .build();
     }
 
