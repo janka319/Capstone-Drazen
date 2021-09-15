@@ -2,6 +2,7 @@ package de.janka.capstonedrazen.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -27,6 +28,10 @@ public class SwaggerConfig {
         return SecurityContext.builder().securityReferences(defaultAuth()).build();
     }
 
+    private Class<?>[] getIgnoredParameterTypes() {
+        return new Class[]{AuthenticationPrincipal.class};
+    }
+
     private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
@@ -39,8 +44,9 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
+                .ignoredParameterTypes(getIgnoredParameterTypes())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("de.janka.capstoneDrazen.backend"))
+                .apis(RequestHandlerSelectors.basePackage("de.janka.capstonedrazen.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(getApiInfo());

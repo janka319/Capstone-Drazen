@@ -43,6 +43,7 @@ public class UserService {
         UserEntity userEntity = new UserEntity();
         userEntity.setUserName(user.getUserName());
         userEntity.setPassword(user.getPassword());
+        userEntity.setRole("user");
 
         return userRepository.save(userEntity);
     }
