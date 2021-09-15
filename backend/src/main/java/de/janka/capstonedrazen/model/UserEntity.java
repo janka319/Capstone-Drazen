@@ -2,7 +2,11 @@ package de.janka.capstonedrazen.model;
 
 import lombok.*;
 
+
 import javax.persistence.*;
+
+
+
 
 @Builder(toBuilder = true)
 @Entity
@@ -11,6 +15,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserEntity {
 
     @Id
@@ -38,11 +43,16 @@ public class UserEntity {
         }
 
         UserEntity that = (UserEntity) o;
+
+        if(this.getId() != null) {
+            return this.getId().equals(that.getId());
+        }
+
         return this.getUserName() != null && this.getUserName().equals(that.getUserName());
     }
 
     @Override
     public int hashCode() {
-        return getUserName().hashCode();
+        return getId() == null ? getUserName().hashCode() : getId().hashCode();
     }
 }
