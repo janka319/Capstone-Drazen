@@ -7,15 +7,16 @@ import de.janka.capstonedrazen.model.UserEntity;
 import de.janka.capstonedrazen.repo.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import java.time.Duration;
 import java.time.Instant;
@@ -26,7 +27,6 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
 
 
 @SpringBootTest(
@@ -51,6 +51,11 @@ public class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @AfterEach
+    public void clearUserRepo() {
+        userRepository.deleteAll();
+    }
+
     @Test
     public void createNewUserAsAdmin() {
         // Given
@@ -61,7 +66,7 @@ public class UserControllerTest {
 
         // When
         HttpEntity<User> httpEntity = new HttpEntity<>(userToAdd, authorizedHeader("Frank", "admin"));
-        ResponseEntity<User> response = restTemplate.exchange(url()+"/create", HttpMethod.POST, httpEntity, User.class);
+        ResponseEntity<User> response = restTemplate.exchange(url() + "/create", HttpMethod.POST, httpEntity, User.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -81,7 +86,7 @@ public class UserControllerTest {
 
         // When
         HttpEntity<User> httpEntity = new HttpEntity<>(userToAdd, authorizedHeader("Frank", "user"));
-        ResponseEntity<User> response = restTemplate.exchange(url()+"/create", HttpMethod.POST, httpEntity, User.class);
+        ResponseEntity<User> response = restTemplate.exchange(url() + "/create", HttpMethod.POST, httpEntity, User.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
@@ -114,6 +119,51 @@ public class UserControllerTest {
         UserEntity foundUserEntity = userRepository.findByUserName("Gwen").orElseThrow();
         assertThat(foundUserEntity.getPassword(), is(not("old-password")));
 
+    }
+
+    @Test
+    public void adminCanResetUsersPassword() {
+        // Given
+        userRepository.save(UserEntity.builder()
+                .userName("Gwen")
+                .password("old-password")
+                .role("user")
+                .build());
+
+        // When
+        HttpEntity<Void> httpEntity = new HttpEntity<>(authorizedHeader("Mark", "admin"));
+        ResponseEntity<User> response = restTemplate
+                .exchange(url() + "/Gwen/reset-password", HttpMethod.PUT, httpEntity, User.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+
+        User actualUser = response.getBody();
+        assertThat(actualUser.getUserName(), is("Gwen"));
+        assertThat(actualUser.getRole(), is("user"));
+        assertThat(actualUser.getPassword(), is(not("old-password")));
+
+        UserEntity foundUserEntity = userRepository.findByUserName("Gwen").orElseThrow();
+        assertThat(foundUserEntity.getPassword(), is(not("old-password")));
+
+    }
+
+    @Test
+    public void testOnlyAdminCanResetUserPassword() {
+        // Given
+        userRepository.save(UserEntity.builder()
+                .userName("Gwen")
+                .password("old-password")
+                .role("user")
+                .build());
+
+        // When
+        HttpEntity<Void> httpEntity = new HttpEntity<>(authorizedHeader("Mark", "user"));
+        ResponseEntity<User> response = restTemplate
+                .exchange(url() + "/Gwen/reset-password", HttpMethod.PUT, httpEntity, User.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     private HttpHeaders authorizedHeader(String username, String role) {
