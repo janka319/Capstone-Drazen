@@ -68,4 +68,13 @@ public class UserService {
         userEntity.setPassword(hashedPassword);
         return userRepository.save(userEntity);
     }
+
+    public Optional<UserEntity> delete(String name) {
+        Optional<UserEntity> userEntityOptional = find(name);
+        if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            userRepository.delete(userEntity);
+        }
+        return userEntityOptional;
+    }
 }
