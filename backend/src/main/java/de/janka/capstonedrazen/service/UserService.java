@@ -61,4 +61,11 @@ public class UserService {
     public List<UserEntity> findAll() {
         return userRepository.findAll();
     }
+
+    public UserEntity updatePassword(String userName, String password) {
+        UserEntity userEntity = find(userName).orElseThrow(() -> new IllegalArgumentException("Username not found: " + userName));
+        String hashedPassword = passwordEncoder.encode(password);
+        userEntity.setPassword(hashedPassword);
+        return userRepository.save(userEntity);
+    }
 }

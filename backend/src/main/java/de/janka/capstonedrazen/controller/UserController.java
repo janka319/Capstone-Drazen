@@ -1,6 +1,7 @@
 package de.janka.capstonedrazen.controller;
 
 
+import de.janka.capstonedrazen.api.NewPassword;
 import de.janka.capstonedrazen.api.User;
 import de.janka.capstonedrazen.model.UserEntity;
 import de.janka.capstonedrazen.service.UserService;
@@ -71,6 +72,19 @@ public class UserController {
             return badRequest().build();
         } catch (EntityExistsException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<User> updatePassword(@AuthenticationPrincipal UserEntity authUser, @RequestBody NewPassword newPassword){
+        try {
+            UserEntity updatedUserEntity = userService.updatePassword(authUser.getUserName(), newPassword.getPassword());
+            User updatedUser = map(updatedUserEntity);
+            updatedUser.setPassword(newPassword.getPassword());
+            return ok(updatedUser);
+        }catch (IllegalArgumentException e) {
+            return badRequest().build();
         }
 
     }
