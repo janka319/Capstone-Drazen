@@ -34,7 +34,7 @@ public class JwtService {
         Map<String,Object> claims = new HashMap<>();
         claims.put("role", user.getRole());
         return Jwts.builder()
-                .setClaims(new HashMap<>())
+                .setClaims(claims)
                 .setSubject(user.getUserName())
                 .setIssuedAt(iat)
                 .setExpiration(exp)

@@ -1,9 +1,11 @@
 package de.janka.capstonedrazen.service;
 
-import de.janka.capstonedrazen.api.User;
 import de.janka.capstonedrazen.model.UserEntity;
 import de.janka.capstonedrazen.repo.UserRepository;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
@@ -14,37 +16,42 @@ import static org.springframework.util.StringUtils.hasText;
 
 
 @Service
+@Getter
+@Setter
 public class UserService {
 
     private UserRepository userRepository;
+    private final PasswordService passwordService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordService passwordService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordService = passwordService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity create(User user) {
-
-        if(!hasText(user.getUserName())) {
+    public UserEntity create(UserEntity userEntity) {
+        String name = userEntity.getUserName();
+        if(!hasText(name)) {
             throw new IllegalArgumentException("Name must not be blank");
         }
+        checkUserNameExists(name);
 
-        if(!hasText(user.getPassword())) {
-            throw new IllegalArgumentException("Password must not be blank");
+        String password = passwordService.getNewPassword();
+        String hashedPassword = passwordEncoder.encode(password);
+
+        UserEntity savedUser = userRepository.save(userEntity.toBuilder()
+                .password(hashedPassword)
+                .build());
+        return savedUser.toBuilder().password(password).build();
+    }
+
+    private void checkUserNameExists(String name) {
+        Optional<UserEntity> existingUser = find(name);
+        if(existingUser.isPresent()) {
+            throw new EntityExistsException(String.format("User with name=%s already exists", name));
         }
-
-        Optional<UserEntity> existingUser = find(user.getUserName());
-        if (existingUser.isPresent()) {
-            throw new EntityExistsException(String.format(
-                    "User with name=%s already exists", user.getUserName()));
-        }
-
-
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUserName(user.getUserName());
-        userEntity.setPassword(user.getPassword());
-
-        return userRepository.save(userEntity);
     }
 
     public Optional<UserEntity> find(String userName) {
@@ -53,5 +60,12 @@ public class UserService {
 
     public List<UserEntity> findAll() {
         return userRepository.findAll();
+    }
+
+    public UserEntity updatePassword(String userName, String password) {
+        UserEntity userEntity = find(userName).orElseThrow(() -> new IllegalArgumentException("Username not found: " + userName));
+        String hashedPassword = passwordEncoder.encode(password);
+        userEntity.setPassword(hashedPassword);
+        return userRepository.save(userEntity);
     }
 }

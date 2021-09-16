@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final String[] SWAGGER_URLS = {"/v2/api-docs/**", "swagger-ui/**", "swagger-resources/**", "/webjars"};
+    private final String[] SWAGGER_URLS = {"/v2/api-docs/**", "/swagger-ui/**", "/swagger-resources/**"};
 
     private final UserEntityDetailsService detailsService;
     private final JwtAuthFilter jwtAuthFilter;
