@@ -4,6 +4,7 @@ package de.janka.capstonedrazen.controller;
 import de.janka.capstonedrazen.api.NewPassword;
 import de.janka.capstonedrazen.api.User;
 import de.janka.capstonedrazen.model.UserEntity;
+import de.janka.capstonedrazen.service.PasswordService;
 import de.janka.capstonedrazen.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -45,10 +46,12 @@ public class UserController {
     public static final String USER_CONTROLLER_TAG = "User";
 
     private UserService userService;
+    private PasswordService passwordService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PasswordService passwordService) {
         this.userService = userService;
+        this.passwordService = passwordService;
     }
 
     @PostMapping(value = "/create", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
@@ -89,6 +92,29 @@ public class UserController {
 
     }
 
+    @PutMapping("/{userName}/reset-password")
+    @ApiResponses(value = {
+            @ApiResponse(code = SC_NOT_FOUND, message = "User not found")
+    })
+    public ResponseEntity<User> resetPassword(@AuthenticationPrincipal UserEntity authUser, @PathVariable String userName){
+        if(!authUser.getRole().equals("admin")) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Optional<UserEntity> optionalUserEntity = userService.find(userName);
+        if(optionalUserEntity.isEmpty()){
+            return badRequest().build();
+        }
+
+        String password = passwordService.getNewPassword();
+
+        UserEntity updatedUserEntity = userService.updatePassword(userName, password);
+
+        User updatedUser = map(updatedUserEntity);
+        updatedUser.setPassword(password);
+
+        return ok(updatedUser);
+
+    }
 
     @GetMapping(value = "{userName}", produces = APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
