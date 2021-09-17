@@ -80,13 +80,13 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<User> updatePassword(@AuthenticationPrincipal UserEntity authUser, @RequestBody NewPassword newPassword){
+    public ResponseEntity<User> updatePassword(@AuthenticationPrincipal UserEntity authUser, @RequestBody NewPassword newPassword) {
         try {
             UserEntity updatedUserEntity = userService.updatePassword(authUser.getUserName(), newPassword.getPassword());
             User updatedUser = map(updatedUserEntity);
             updatedUser.setPassword(newPassword.getPassword());
             return ok(updatedUser);
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return badRequest().build();
         }
 
@@ -96,12 +96,12 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = SC_NOT_FOUND, message = "User not found")
     })
-    public ResponseEntity<User> resetPassword(@AuthenticationPrincipal UserEntity authUser, @PathVariable String userName){
-        if(!authUser.getRole().equals("admin")) {
+    public ResponseEntity<User> resetPassword(@AuthenticationPrincipal UserEntity authUser, @PathVariable String userName) {
+        if (!authUser.getRole().equals("admin")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         Optional<UserEntity> optionalUserEntity = userService.find(userName);
-        if(optionalUserEntity.isEmpty()){
+        if (optionalUserEntity.isEmpty()) {
             return badRequest().build();
         }
 
@@ -142,6 +142,26 @@ public class UserController {
 
         List<User> users = map(userEntities);
         return ok(users);
+    }
+
+    @DeleteMapping(value = "{userName}", produces = APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = SC_NOT_FOUND, message = "User not found")
+    })
+    public ResponseEntity<User> delete(@AuthenticationPrincipal UserEntity authUser, @PathVariable String userName) {
+        if (authUser.getRole().equals("user") && !authUser.getUserName().equals(userName)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        if (authUser.getRole().equals("admin") && authUser.getUserName().equals(userName)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Optional<UserEntity> userEntityOptional = userService.delete(userName);
+        if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            User user = map(userEntity);
+            return ok(user);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     private User map(UserEntity userEntity) {
