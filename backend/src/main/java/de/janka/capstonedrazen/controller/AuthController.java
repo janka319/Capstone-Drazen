@@ -22,6 +22,8 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("auth")
 public class AuthController {
 
+    public static final String ACCESS_TOKEN_URL = "/auth/access_token";
+
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserService userService;
