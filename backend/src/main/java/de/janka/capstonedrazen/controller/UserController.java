@@ -4,7 +4,6 @@ package de.janka.capstonedrazen.controller;
 import de.janka.capstonedrazen.api.NewPassword;
 import de.janka.capstonedrazen.api.User;
 import de.janka.capstonedrazen.model.UserEntity;
-import de.janka.capstonedrazen.service.PasswordService;
 import de.janka.capstonedrazen.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -46,12 +45,10 @@ public class UserController {
     public static final String USER_CONTROLLER_TAG = "User";
 
     private UserService userService;
-    private PasswordService passwordService;
 
     @Autowired
-    public UserController(UserService userService, PasswordService passwordService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.passwordService = passwordService;
     }
 
     @PostMapping(value = "/create", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
@@ -60,15 +57,36 @@ public class UserController {
             @ApiResponse(code = SC_CONFLICT, message = "Unable to create User, user already exists")
     })
     public ResponseEntity<User> create(@AuthenticationPrincipal UserEntity authUser, @RequestBody User user) {
-        if (!authUser.getRole().equals("admin")) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if (authUser.getRole().equals("admin")) {
+            try {
+                UserEntity userEntity = map(user);
+
+                UserEntity createdUserEntity = userService.create(userEntity);
+                User createdUser = map(createdUserEntity);
+                createdUser.setPassword(createdUserEntity.getPassword());
+                return ok(createdUser);
+
+            } catch (IllegalArgumentException e) {
+                return badRequest().build();
+            } catch (EntityExistsException e) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         }
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+    }
+
+    @PostMapping(value = "/createAsUser", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(code = SC_BAD_REQUEST, message = "Unable to create User with blank name"),
+            @ApiResponse(code = SC_CONFLICT, message = "Unable to create User, user already exists")
+    })
+    public ResponseEntity<User> createAsUser(@RequestBody User user) {
         try {
             UserEntity userEntity = map(user);
 
-            UserEntity createdUserEntity = userService.create(userEntity);
+            UserEntity createdUserEntity = userService.createAsUser(userEntity);
             User createdUser = map(createdUserEntity);
-            createdUser.setPassword(createdUserEntity.getPassword());
             return ok(createdUser);
 
         } catch (IllegalArgumentException e) {
@@ -76,8 +94,8 @@ public class UserController {
         } catch (EntityExistsException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-
     }
+
 
     @PutMapping("/password")
     public ResponseEntity<User> updatePassword(@AuthenticationPrincipal UserEntity authUser, @RequestBody NewPassword newPassword) {
@@ -105,7 +123,7 @@ public class UserController {
             return badRequest().build();
         }
 
-        String password = passwordService.getNewPassword();
+        String password = "";
 
         UserEntity updatedUserEntity = userService.updatePassword(userName, password);
 
@@ -166,14 +184,15 @@ public class UserController {
 
     private User map(UserEntity userEntity) {
         return User.builder()
-                .userName(userEntity.getUserName())
+                .username(userEntity.getUserName())
                 .role(userEntity.getRole())
                 .build();
     }
 
     private UserEntity map(User user) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserName(user.getUserName());
+        userEntity.setUserName(user.getUsername());
+        userEntity.setPassword(user.getPassword());
         userEntity.setRole(user.getRole());
         return userEntity;
     }

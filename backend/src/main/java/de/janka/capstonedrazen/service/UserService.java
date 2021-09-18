@@ -4,6 +4,7 @@ import de.janka.capstonedrazen.model.UserEntity;
 import de.janka.capstonedrazen.repo.UserRepository;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,11 @@ import static org.springframework.util.StringUtils.hasText;
 public class UserService {
 
     private UserRepository userRepository;
-    private final PasswordService passwordService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordService passwordService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.passwordService = passwordService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -38,13 +37,25 @@ public class UserService {
         }
         checkUserNameExists(name);
 
-        String password = passwordService.getNewPassword();
-        String hashedPassword = passwordEncoder.encode(password);
+        String randomPassword = RandomStringUtils.randomAlphanumeric(12);
+        String hashedPassword = passwordEncoder.encode(randomPassword);
+        userEntity.setPassword(hashedPassword);
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+        savedUserEntity.setPassword(randomPassword);
+        return savedUserEntity;
+    }
 
-        UserEntity savedUser = userRepository.save(userEntity.toBuilder()
-                .password(hashedPassword)
-                .build());
-        return savedUser.toBuilder().password(password).build();
+    public UserEntity createAsUser(UserEntity userEntity) {
+        String name = userEntity.getUserName();
+        if(!hasText(name)) {
+            throw new IllegalArgumentException("Name must not be blank");
+        }
+        checkUserNameExists(name);
+
+
+        String hashedPassword = passwordEncoder.encode(userEntity.getPassword());
+        userEntity.setPassword(hashedPassword);
+        return userRepository.save(userEntity);
     }
 
     private void checkUserNameExists(String name) {

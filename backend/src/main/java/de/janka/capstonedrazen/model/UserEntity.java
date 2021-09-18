@@ -15,7 +15,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class UserEntity {
 
     @Id

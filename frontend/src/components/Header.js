@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export default function Header() {
-  return <Wrapper>Welcome</Wrapper>
+  return <Wrapper></Wrapper>
 }
 
 const Wrapper = styled.div`

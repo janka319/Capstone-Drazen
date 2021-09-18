@@ -4,7 +4,6 @@ import de.janka.capstonedrazen.filter.JwtAuthFilter;
 import de.janka.capstonedrazen.service.UserEntityDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,7 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers(GET, SWAGGER_URLS).permitAll()
-                .antMatchers(POST, ACCESS_TOKEN_URL).permitAll()
+                .antMatchers(POST, "/auth/access_token").permitAll()
+                .antMatchers(POST, "/user/createAsUser").permitAll()
                 .antMatchers("/**").authenticated()
                 .and()
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

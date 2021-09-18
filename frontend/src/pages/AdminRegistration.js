@@ -16,40 +16,33 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const initialState = { userName: '', password: '' }
+const initialState = { username: '', password: '' }
 
-export default function Registration() {
+export default function AdminRegistration() {
   const classes = useStyles()
 
   const [credentials, setCredentials] = useState(initialState)
+
+  const [newPassword, setNewPassword] = useState('')
 
   const handleCredentialsChange = event => {
     setCredentials({ ...credentials, [event.target.name]: event.target.value })
   }
 
   const handleSubmit = event => {
-    createUser(credentials)
+    createUser(credentials).then(dto => setNewPassword(dto.password))
   }
 
   return (
     <PageLayout>
-      <Header></Header>
+      <Header>Welcome</Header>
       <Wrapper>
         <TextField
           required
           id="standard required"
           label="Username"
-          name="userName"
-          value={credentials.userName}
-          onChange={handleCredentialsChange}
-        />
-        <TextField
-          required
-          id="standard required"
-          label="Password"
-          type="password"
-          name="password"
-          value={credentials.password}
+          name="username"
+          value={credentials.username}
           onChange={handleCredentialsChange}
         />
         <Button
@@ -59,8 +52,9 @@ export default function Registration() {
           className={classes.button}
           startIcon={<SaveIcon />}
         >
-          Send
+          Create user
         </Button>
+        <p>New Password:{newPassword}</p>
       </Wrapper>
       <Footer></Footer>
     </PageLayout>

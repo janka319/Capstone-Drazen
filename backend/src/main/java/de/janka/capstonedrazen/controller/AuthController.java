@@ -39,7 +39,7 @@ public class AuthController {
     @GetMapping("me")
     public ResponseEntity<User> getLoggedInUser(@AuthenticationPrincipal UserEntity user) {
         return ok(
-                User.builder().userName(user.getUserName()).build()
+                User.builder().username(user.getUserName()).build()
         );
     }
 

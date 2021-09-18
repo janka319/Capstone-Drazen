@@ -13,7 +13,7 @@ import lombok.Setter;
 public class User {
 
     @ApiModelProperty(required = true, example = "John Doe", notes = "The name of the user")
-    private String userName;
+    private String username;
 
     private String password;
 
