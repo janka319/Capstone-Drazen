@@ -7,6 +7,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 import SendIcon from '@mui/icons-material/Send'
 import Footer from '../components/Footer'
+import { Redirect } from 'react-router-dom'
+import Error from '../components/Error'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -19,17 +21,22 @@ const initialState = {
   password: '',
 }
 
-export default function Login({ onLogin }) {
+export default function Login({ token, onLogin }) {
   const classes = useStyles()
 
   const [credentials, setCredentials] = useState(initialState)
+  const [error, setError] = useState()
 
   const handleCredentialsChange = event =>
     setCredentials({ ...credentials, [event.target.name]: event.target.value })
 
   const handleSubmit = event => {
     event.preventDefault()
-    onLogin(credentials)
+    onLogin(credentials).catch(setError)
+  }
+
+  if (token) {
+    return <Redirect to="/results" />
   }
 
   return (
@@ -63,6 +70,7 @@ export default function Login({ onLogin }) {
           Login
         </Button>
       </Wrapper>
+      {error && <Error>{error.message}</Error>}
       <Footer></Footer>
     </PageLayout>
   )
