@@ -57,7 +57,7 @@ public class UserController {
             @ApiResponse(code = SC_CONFLICT, message = "Unable to create User, user already exists")
     })
     public ResponseEntity<User> create(@AuthenticationPrincipal UserEntity authUser, @RequestBody User user) {
-        if (authUser.getRole().equals("admin")) {
+        if (!authUser.getRole().equals("admin")) {
             throw new UnauthorizedUserException("Are you an Admin?");
         }
 
@@ -76,7 +76,7 @@ public class UserController {
             @ApiResponse(code = SC_CONFLICT, message = "Unable to create User, user already exists")
     })
     public ResponseEntity<User> createAsUser(@RequestBody User user) {
-        if (user.getRole().equals("user")) {
+        if (!user.getRole().equals("user")) {
             throw new UnauthorizedUserException("Are you an User?");
         }
             UserEntity userEntity = map(user);

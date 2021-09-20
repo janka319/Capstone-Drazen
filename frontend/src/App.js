@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import { useEffect, useState } from 'react'
 import { getToken } from './services/user-api-service'
 import Results from './pages/Results'
+import ProtectedRoute from './auth/ProtectedRoute'
 
 export default function App() {
   const [token, setToken] = useState()
@@ -20,12 +21,15 @@ export default function App() {
     <Router>
       <Switch>
         <Route exact path="/" component={Login} />
-        <Route exact path="/results" component={Results} />
+        <ProtectedRoute exact path="/results" component={Results} />
         <Route path="/login">
           <Login onLogin={login} token={token} />
         </Route>
-        <Route path="/settings" component={Settings} />
-        <Route path="/admin/registration" component={AdminRegistration} />
+        <ProtectedRoute path="/settings" component={Settings} />
+        <ProtectedRoute
+          path="/admin/registration"
+          component={AdminRegistration}
+        />
         <Route path="/user/registration" component={UserRegistration} />
       </Switch>
     </Router>

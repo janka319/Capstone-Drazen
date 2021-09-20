@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const initialState = { username: '', password: '' }
+const initialState = { username: '', password: '', role: 'user' }
 
 export default function AdminRegistration() {
   const classes = useStyles()
