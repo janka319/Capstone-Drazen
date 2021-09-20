@@ -5,7 +5,9 @@ import Footer from '../components/Footer'
 export default function Results() {
   return (
     <PageLayout>
-      <Footer>Here are results</Footer>
+      <Wrapper>
+        <Footer>Here are results</Footer>
+      </Wrapper>
     </PageLayout>
   )
 }

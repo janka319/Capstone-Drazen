@@ -8,7 +8,7 @@ import SaveIcon from '@material-ui/icons/Save'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 
-import { createUser, createUserAsUser } from '../services/user-api-service'
+import { createUserAsUser } from '../services/user-api-service'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -23,14 +23,12 @@ export default function AdminRegistration() {
 
   const [credentials, setCredentials] = useState(initialState)
 
-  const [newPassword, setNewPassword] = useState('')
-
   const handleCredentialsChange = event => {
     setCredentials({ ...credentials, [event.target.name]: event.target.value })
   }
 
   const handleSubmit = event => {
-    createUserAsUser(credentials).then(dto => setNewPassword(dto.password))
+    createUserAsUser(credentials).then(dto => dto.password)
   }
 
   return (
