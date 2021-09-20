@@ -62,7 +62,7 @@ public class UserControllerTest {
     public void createNewUserAsAdmin() {
         // Given
         User userToAdd = User.builder()
-                .userName("Lisa")
+                .username("Lisa")
                 .role("user")
                 .build();
 
@@ -73,7 +73,7 @@ public class UserControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         User actualUser = response.getBody();
-        assertThat(actualUser.getUserName(), is("Lisa"));
+        assertThat(actualUser.getUsername(), is("Lisa"));
         assertThat(actualUser.getRole(), is("user"));
         assertThat(actualUser.getPassword(), is(notNullValue()));
     }
@@ -82,7 +82,7 @@ public class UserControllerTest {
     public void userCanNotCreateANewUser() {
         // Given
         User userToAdd = User.builder()
-                .userName("Lisa")
+                .username("Lisa")
                 .role("user")
                 .build();
 
@@ -114,7 +114,7 @@ public class UserControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         User actualUser = response.getBody();
-        assertThat(actualUser.getUserName(), is("Gwen"));
+        assertThat(actualUser.getUsername(), is("Gwen"));
         assertThat(actualUser.getRole(), is("user"));
         assertThat(actualUser.getPassword(), is("new-password"));
 
@@ -141,7 +141,7 @@ public class UserControllerTest {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
 
         User actualUser = response.getBody();
-        assertThat(actualUser.getUserName(), is("Gwen"));
+        assertThat(actualUser.getUsername(), is("Gwen"));
         assertThat(actualUser.getRole(), is("user"));
         assertThat(actualUser.getPassword(), is(not("old-password")));
 
@@ -185,7 +185,7 @@ public class UserControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         User actualUser = response.getBody();
-        assertThat(actualUser.getUserName(), is("Louis"));
+        assertThat(actualUser.getUsername(), is("Louis"));
         assertThat(actualUser.getRole(), is("user"));
         assertThat(actualUser.getPassword(), is(nullValue()));
 
@@ -231,7 +231,7 @@ public class UserControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         User actualUser = response.getBody();
-        assertThat(actualUser.getUserName(), is("Louis"));
+        assertThat(actualUser.getUsername(), is("Louis"));
         assertThat(actualUser.getRole(), is("user"));
         assertThat(actualUser.getPassword(), is(nullValue()));
 

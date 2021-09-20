@@ -6,9 +6,9 @@ import styled from 'styled-components'
 import TextField from '@material-ui/core/TextField'
 import SaveIcon from '@material-ui/icons/Save'
 import { makeStyles } from '@material-ui/core/styles'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-import { createUser } from '../services/user-api-service'
+import { createUserAsUser } from '../services/user-api-service'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -16,9 +16,9 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const initialState = { userName: '', password: '' }
+const initialState = { username: '', password: '' }
 
-export default function Registration() {
+export default function AdminRegistration() {
   const classes = useStyles()
 
   const [credentials, setCredentials] = useState(initialState)
@@ -28,26 +28,26 @@ export default function Registration() {
   }
 
   const handleSubmit = event => {
-    createUser(credentials)
+    createUserAsUser(credentials).then(dto => dto.password)
   }
 
   return (
     <PageLayout>
-      <Header></Header>
+      <Header>Welcome</Header>
       <Wrapper>
         <TextField
           required
           id="standard required"
           label="Username"
-          name="userName"
-          value={credentials.userName}
+          name="username"
+          value={credentials.username}
           onChange={handleCredentialsChange}
         />
         <TextField
           required
           id="standard required"
-          label="Password"
           type="password"
+          label="Password"
           name="password"
           value={credentials.password}
           onChange={handleCredentialsChange}
@@ -59,7 +59,7 @@ export default function Registration() {
           className={classes.button}
           startIcon={<SaveIcon />}
         >
-          Send
+          Create user
         </Button>
       </Wrapper>
       <Footer></Footer>

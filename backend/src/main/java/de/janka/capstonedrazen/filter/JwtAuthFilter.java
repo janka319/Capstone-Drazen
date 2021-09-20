@@ -42,8 +42,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 String username = claims.getSubject();
                 String role = claims.get("role", String.class);
 
-
-
                 SecurityContextHolder.getContext().setAuthentication(
                         new UsernamePasswordAuthenticationToken(
                                 UserEntity.builder().userName(username).role(role).build(),
@@ -51,7 +49,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                 List.of(new SimpleGrantedAuthority(role))
                         )
                 );
-
 
             }
         } catch (Exception e) {

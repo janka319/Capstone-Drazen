@@ -22,6 +22,8 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("auth")
 public class AuthController {
 
+    public static final String ACCESS_TOKEN_URL = "/auth/access_token";
+
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserService userService;
@@ -37,7 +39,7 @@ public class AuthController {
     @GetMapping("me")
     public ResponseEntity<User> getLoggedInUser(@AuthenticationPrincipal UserEntity user) {
         return ok(
-                User.builder().userName(user.getUserName()).build()
+                User.builder().username(user.getUserName()).build()
         );
     }
 
