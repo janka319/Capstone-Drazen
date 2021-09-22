@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useState } from 'react'
 
 import { createUser } from '../services/user-api-service'
+import { useAuth } from '../auth/AuthProvider'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -16,13 +17,13 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const initialState = { username: '', password: '' }
+const initialState = { username: '', password: '', role: 'user' }
 
 export default function AdminRegistration() {
   const classes = useStyles()
 
   const [credentials, setCredentials] = useState(initialState)
-
+  const { token } = useAuth()
   const [newPassword, setNewPassword] = useState('')
 
   const handleCredentialsChange = event => {
@@ -30,7 +31,7 @@ export default function AdminRegistration() {
   }
 
   const handleSubmit = event => {
-    createUser(credentials).then(dto => setNewPassword(dto.password))
+    createUser(credentials, token).then(dto => setNewPassword(dto.password))
   }
 
   return (
