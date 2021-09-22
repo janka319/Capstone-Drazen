@@ -9,6 +9,7 @@ import SendIcon from '@mui/icons-material/Send'
 import Footer from '../components/Footer'
 import { Redirect } from 'react-router-dom'
 import Error from '../components/Error'
+import { useAuth } from '../auth/AuthProvider'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -21,9 +22,10 @@ const initialState = {
   password: '',
 }
 
-export default function Login({ token, onLogin }) {
-  const classes = useStyles()
+export default function Login() {
+  const classes = useStyles
 
+  const { login, user } = useAuth()
   const [credentials, setCredentials] = useState(initialState)
   const [error, setError] = useState()
 
@@ -32,10 +34,13 @@ export default function Login({ token, onLogin }) {
 
   const handleSubmit = event => {
     event.preventDefault()
-    onLogin(credentials).catch(setError)
+    setError()
+    login(credentials).catch(error => {
+      setError(error)
+    })
   }
 
-  if (token) {
+  if (user) {
     return <Redirect to="/results" />
   }
 
@@ -80,4 +85,5 @@ const Wrapper = styled.div`
   display: grid;
   place-items: center;
   text-align: center;
+  grid-template-rows: 1fr 1fr 1fr;
 `
