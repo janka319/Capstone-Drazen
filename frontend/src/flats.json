@@ -1,0 +1,27 @@
+[
+  {
+    "id": "1",
+    "image": "http://source.unsplash.com/random/400x400?room",
+    "size": "56",
+    "rent": "1200",
+    "email": "example@google.com"
+  },
+
+  {
+    "id": "2",
+    "image": "http://source.unsplash.com/random/400x400?room",
+    "size": "78",
+    "rent": "1450",
+    "email": "example@google.com"
+  },
+
+  {
+    "id": "3",
+    "image": "http://source.unsplash.com/random/400x400?room",
+    "size": "30",
+    "rent": "600",
+    "email": "example@google.com"
+  }
+
+
+]

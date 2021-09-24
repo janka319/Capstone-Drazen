@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom'
 import Settings from './pages/Login'
 import AdminRegistration from './pages/AdminRegistration'
 import UserRegistration from './pages/UserRegistration'
@@ -13,13 +18,16 @@ export default function App() {
       <Router>
         <Switch>
           <Route path="/login" component={Login} />
-          <ProtectedRoute exact path="/results" component={Results} />
+          <ProtectedRoute path="/results" component={Results} />
           <ProtectedRoute path="/settings" component={Settings} />
           <ProtectedRoute
             path="/admin/registration"
             component={AdminRegistration}
           />
           <Route path="/user/registration" component={UserRegistration} />
+          <Route path="/">
+            <Redirect to="/login" />
+          </Route>
         </Switch>
       </Router>
     </AuthProvider>

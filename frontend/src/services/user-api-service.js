@@ -19,3 +19,12 @@ export const createUserAsUser = credentials =>
   axios
     .post('/api/capstoneDrazen/user/createAsUser', credentials)
     .then(response => response.data)
+
+export const findAllFlats = token =>
+  axios
+    .get('/api/capstoneDrazen/flats', token, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    })
+    .then(response => response.data)
