@@ -9,11 +9,11 @@ import { useEffect, useState } from 'react'
 import { findAllFlats } from '../services/user-api-service'
 
 export default function Results() {
-  const { logout, user } = useAuth()
+  const { logout, user, token } = useAuth()
   const [flats, setFlats] = useState([])
   useEffect(() => {
-    findAllFlats().then(setFlats)
-  }, [])
+    findAllFlats(token).then(setFlats)
+  }, [token])
 
   return (
     <PageLayout>
@@ -33,6 +33,7 @@ export default function Results() {
             image={flat.image}
             size={flat.size}
             rent={flat.rent}
+            email={flat.email}
           />
         ))}
       </Wrapper>

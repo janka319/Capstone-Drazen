@@ -6,13 +6,15 @@ export const getToken = credentials =>
     .then(response => response.data)
     .then(dto => dto.token)
 
+const headers = token => ({
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
+
 export const createUser = (credentials, token) =>
   axios
-    .post('/api/capstoneDrazen/user/create', credentials, {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    })
+    .post('/api/capstoneDrazen/user/create', credentials, headers(token))
     .then(response => response.data)
 
 export const createUserAsUser = credentials =>
@@ -22,9 +24,5 @@ export const createUserAsUser = credentials =>
 
 export const findAllFlats = token =>
   axios
-    .get('/api/capstoneDrazen/flats', token, {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    })
+    .get('/api/capstoneDrazen/flats', headers(token))
     .then(response => response.data)

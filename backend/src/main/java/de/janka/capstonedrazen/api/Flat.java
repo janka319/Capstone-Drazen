@@ -13,5 +13,6 @@ public class Flat {
     private String image;
     private String size;
     private String rent;
+    private String email;
 
 }

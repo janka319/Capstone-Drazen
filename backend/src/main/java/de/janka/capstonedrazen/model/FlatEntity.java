@@ -26,6 +26,9 @@ public class FlatEntity {
     @Column(name="flat_image_url")
     private String image;
 
+    @Column(name = "email")
+    private String email;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
