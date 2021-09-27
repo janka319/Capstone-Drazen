@@ -9,7 +9,8 @@ import lombok.Data;
 @Data
 public class Flat {
 
-    private String id;
+    private Long id;
+    private String address;
     private String image;
     private String size;
     private String rent;
