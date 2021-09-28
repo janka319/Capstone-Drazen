@@ -11,6 +11,7 @@ import Login from './pages/Login'
 import Results from './pages/Results'
 import ProtectedRoute from './auth/ProtectedRoute'
 import AuthProvider from './auth/AuthProvider'
+import Publish from './pages/Publish'
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Switch>
           <Route path="/login" component={Login} />
           <ProtectedRoute path="/results" component={Results} />
+          <ProtectedRoute path="/publish" component={Publish} />
           <ProtectedRoute path="/settings" component={Settings} />
           <ProtectedRoute
             path="/admin/registration"

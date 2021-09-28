@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Header from '../components/Header'
 import Button from '@mui/material/Button'
 import { useAuth } from '../auth/AuthProvider'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import ApartmentCard from '../components/ApartmentCard'
 import { useEffect, useState } from 'react'
 import { findAllFlats } from '../services/user-api-service'
@@ -18,6 +18,7 @@ export default function Results() {
   return (
     <PageLayout>
       <Header>
+        <Link to="/publish">Inserieren</Link>
         <Button variant="logout" onClick={logout}>
           Logout
         </Button>
@@ -31,6 +32,7 @@ export default function Results() {
           <ApartmentCard
             key={flat.id}
             image={flat.image}
+            address={flat.address}
             size={flat.size}
             rent={flat.rent}
             email={flat.email}

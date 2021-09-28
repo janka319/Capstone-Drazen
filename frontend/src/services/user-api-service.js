@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const getToken = credentials =>
   axios
-    .post('api/capstoneDrazen/auth/access_token', credentials)
+    .post('/api/capstoneDrazen/auth/access_token', credentials)
     .then(response => response.data)
     .then(dto => dto.token)
 
@@ -24,5 +24,10 @@ export const createUserAsUser = credentials =>
 
 export const findAllFlats = token =>
   axios
-    .get('/api/capstoneDrazen/flats', headers(token))
+    .get('/api/capstoneDrazen/flats/search', headers(token))
+    .then(response => response.data)
+
+export const createFlat = (flat, token) =>
+  axios
+    .post('/api/capstoneDrazen/flats/publish', flat, headers(token))
     .then(response => response.data)

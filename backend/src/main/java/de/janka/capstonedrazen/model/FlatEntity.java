@@ -1,32 +1,34 @@
 package de.janka.capstonedrazen.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "flats_table")
 @Getter
 @Setter
 public class FlatEntity {
 
     @Id
-    @Column(name = "flat_id")
+    @GeneratedValue
+    @Column(name = "flat_id", nullable = false)
     private Long id;
 
-    @Column(name = "flat_rent")
+    @Column(name = "flat_address", nullable = false)
+    private String address;
+
+    @Column(name = "flat_rent", nullable = false)
     private String rent;
 
-    @Column(name = "flat_size")
+    @Column(name = "flat_size", nullable = false)
     private String size;
 
     @Column(name="flat_image_url")
     private String image;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Override

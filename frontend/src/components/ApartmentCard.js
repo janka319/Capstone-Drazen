@@ -4,8 +4,10 @@ export default function ApartmentCard(props) {
   return (
     <Wrapper>
       <img src={props.image} alt="Bild der Wohnung" />
+      <p>Adresse der Wohnung: {props.address}</p>
       <p>Größe der Wohnung: {props.size}</p>
       <p>Miete der Wohnung: {props.rent}</p>
+      <a href={props.email}>Kontakt des Anbieter</a>
     </Wrapper>
   )
 }
