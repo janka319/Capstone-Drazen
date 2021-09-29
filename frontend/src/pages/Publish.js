@@ -9,6 +9,9 @@ import Button from '@mui/material/Button'
 import SendIcon from '@mui/icons-material/Send'
 import { makeStyles } from '@material-ui/core/styles'
 import Navbar from '../components/Navbar'
+import DeleteIcon from '@mui/icons-material/Delete'
+import ButtonGroup from '../components/ButtonGroup'
+import Error from '../components/Error'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -16,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const initialState = {
+const initialFlat = {
   address: '',
   rent: '',
   size: '',
@@ -28,7 +31,7 @@ export default function Publish() {
   const classes = useStyles
 
   const { token, user } = useAuth()
-  const [flat, setFlat] = useState(initialState)
+  const [flat, setFlat] = useState(initialFlat)
 
   const handleFlatsChange = event => {
     setFlat({ ...flat, [event.target.name]: event.target.value })
@@ -38,8 +41,17 @@ export default function Publish() {
     event.preventDefault()
     createFlat(flat, token)
       .then(setFlat)
-      .finally(() => setFlat(initialState))
+      .finally(() => setFlat(initialFlat))
   }
+
+  const clearFlat = () => setFlat(initialFlat)
+
+  const flatCheck =
+    flat.address.length &&
+    flat.size.length &&
+    flat.rent.length &&
+    flat.email.length &&
+    flat.image.length
 
   return (
     <PageLayout>
@@ -87,18 +99,34 @@ export default function Publish() {
           value={flat.email}
           onChange={handleFlatsChange}
         />
-        <Button
-          style={{
-            margin: '8px',
-          }}
-          onClick={handleSubmit}
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          endIcon={<SendIcon />}
-        >
-          Publish
-        </Button>
+        {!flatCheck && <Error>No field should be empty!</Error>}
+        <ButtonGroup>
+          <Button
+            style={{
+              margin: '8px',
+            }}
+            onClick={clearFlat}
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            startIcon={<DeleteIcon />}
+          >
+            Cancel
+          </Button>
+          <Button
+            disabled={!flatCheck}
+            style={{
+              margin: '8px',
+            }}
+            onClick={handleSubmit}
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            endIcon={<SendIcon />}
+          >
+            Publish
+          </Button>
+        </ButtonGroup>
       </Wrapper>
     </PageLayout>
   )

@@ -1,22 +1,57 @@
 import styled from 'styled-components/macro'
 import { deleteById } from '../services/user-api-service'
 import { useAuth } from '../auth/AuthProvider'
+import DeleteIcon from '@mui/icons-material/Delete'
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import Button from '@mui/material/Button'
 
-export default function ApartmentCard(props, reloadPage) {
-  const { token } = useAuth()
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}))
+
+export default function ApartmentCard({
+  id,
+  image,
+  address,
+  size,
+  rent,
+  email,
+  reloadPage,
+}) {
+  const classes = useStyles
+
+  const { token, user } = useAuth()
 
   const handleDelete = () => {
-    deleteById(props.id, token).then(reloadPage)
+    deleteById(id, token)
+      .then(() => reloadPage())
+      .catch(error => console.error(error))
   }
 
   return (
     <Wrapper>
-      <img src={props.image} alt="Bild der Wohnung" />
-      <address>Adresse der Wohnung: {props.address}</address>
-      <p>Größe der Wohnung: {props.size}</p>
-      <p>Miete der Wohnung: {props.rent}</p>
-      <a href={'mailto:' + props.email}>Kontakt des Anbieter</a>
-      <button onClick={handleDelete}>Delete</button>
+      <img src={image} alt="Bild der Wohnung" />
+      <address>Adresse der Wohnung: {address}</address>
+      <p>Größe der Wohnung: {size}</p>
+      <p>Miete der Wohnung: {rent}</p>
+      <a href={'mailto:' + email}>Kontakt des Anbieter</a>
+      {user && user.role === 'admin' && (
+        <Button
+          style={{
+            margin: '8px',
+          }}
+          onClick={handleDelete}
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={<DeleteIcon />}
+        >
+          Delete
+        </Button>
+      )}
     </Wrapper>
   )
 }

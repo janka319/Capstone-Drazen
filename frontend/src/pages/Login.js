@@ -8,6 +8,8 @@ import SendIcon from '@mui/icons-material/Send'
 import { Redirect } from 'react-router-dom'
 import Error from '../components/Error'
 import { useAuth } from '../auth/AuthProvider'
+import Header from '../components/Header'
+import Navbar from '../components/Navbar'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -44,6 +46,9 @@ export default function Login() {
 
   return (
     <PageLayout>
+      <Header>
+        <Navbar />
+      </Header>
       <Wrapper>
         <TextField
           required
