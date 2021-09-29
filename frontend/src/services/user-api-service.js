@@ -31,3 +31,9 @@ export const createFlat = (flat, token) =>
   axios
     .post('/api/capstoneDrazen/flats/publish', flat, headers(token))
     .then(response => response.data)
+
+export const deleteById = (id, token) =>
+  axios.delete(`/api/capstoneDrazen/flats/${id}`, headers(token))
+
+export const updatePassword = (token, password) =>
+  axios.put('api/capstoneDrazen/user/password', { password }, headers(token))

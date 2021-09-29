@@ -1,44 +1,45 @@
 import PageLayout from '../components/PageLayout'
 import styled from 'styled-components'
 import Header from '../components/Header'
-import Button from '@mui/material/Button'
 import { useAuth } from '../auth/AuthProvider'
-import { Link, NavLink } from 'react-router-dom'
 import ApartmentCard from '../components/ApartmentCard'
 import { useEffect, useState } from 'react'
 import { findAllFlats } from '../services/user-api-service'
+import Navbar from '../components/Navbar'
 
 export default function Results() {
-  const { logout, user, token } = useAuth()
+  const { user, token } = useAuth()
   const [flats, setFlats] = useState([])
   useEffect(() => {
     findAllFlats(token).then(setFlats)
   }, [token])
 
+  const reloadPage = () => {
+    findAllFlats(token)
+      .then(setFlats)
+      .catch(error => console.error(error))
+  }
+
+  const allFlats = flats.map(flat => (
+    <ApartmentCard
+      key={flat.id}
+      id={flat.id}
+      image={flat.image}
+      address={flat.address}
+      size={flat.size}
+      rent={flat.rent}
+      email={flat.email}
+      reloadPage={reloadPage}
+    />
+  ))
+
   return (
     <PageLayout>
       <Header>
-        <Link to="/publish">Inserieren</Link>
-        <Button variant="logout" onClick={logout}>
-          Logout
-        </Button>
-        {user.role === 'admin' && (
-          <NavLink to="/admin/registration">Admin</NavLink>
-        )}
+        <Navbar user={user} />
       </Header>
 
-      <Wrapper>
-        {flats.map(flat => (
-          <ApartmentCard
-            key={flat.id}
-            image={flat.image}
-            address={flat.address}
-            size={flat.size}
-            rent={flat.rent}
-            email={flat.email}
-          />
-        ))}
-      </Wrapper>
+      <Wrapper>{allFlats}</Wrapper>
     </PageLayout>
   )
 }

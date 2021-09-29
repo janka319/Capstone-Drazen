@@ -5,7 +5,16 @@ import PageLayout from '../components/PageLayout'
 import Header from '../components/Header'
 import styled from 'styled-components'
 import { createFlat } from '../services/user-api-service'
-import Button from '../components/Button'
+import Button from '@mui/material/Button'
+import SendIcon from '@mui/icons-material/Send'
+import { makeStyles } from '@material-ui/core/styles'
+import Navbar from '../components/Navbar'
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}))
 
 const initialState = {
   address: '',
@@ -16,14 +25,17 @@ const initialState = {
 }
 
 export default function Publish() {
-  const { token } = useAuth()
+  const classes = useStyles
+
+  const { token, user } = useAuth()
   const [flat, setFlat] = useState(initialState)
 
   const handleFlatsChange = event => {
     setFlat({ ...flat, [event.target.name]: event.target.value })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = event => {
+    event.preventDefault()
     createFlat(flat, token)
       .then(setFlat)
       .finally(() => setFlat(initialState))
@@ -31,8 +43,10 @@ export default function Publish() {
 
   return (
     <PageLayout>
-      <Header></Header>
-      <Wrapper>
+      <Header>
+        <Navbar user={user} />
+      </Header>
+      <Wrapper onSubmit={handleSubmit}>
         <TextField
           required
           id="standard required"
@@ -73,15 +87,27 @@ export default function Publish() {
           value={flat.email}
           onChange={handleFlatsChange}
         />
-        <Button onClick={handleSubmit}>Hochladen</Button>
+        <Button
+          style={{
+            margin: '8px',
+          }}
+          onClick={handleSubmit}
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          endIcon={<SendIcon />}
+        >
+          Publish
+        </Button>
       </Wrapper>
     </PageLayout>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   display: grid;
-  place-items: center;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   grid-template-rows: 1fr 1fr 1fr;
 `
