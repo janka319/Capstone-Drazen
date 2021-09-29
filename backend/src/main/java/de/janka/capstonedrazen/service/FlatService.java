@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 public class FlatService {
 
-    private FlatRepository flatRepository;
+    private final FlatRepository flatRepository;
 
     @Autowired
     public FlatService(FlatRepository flatRepository) {
@@ -30,8 +30,11 @@ public class FlatService {
 
     public FlatEntity create(Flat flat) {
         FlatEntity flatEntity = map(flat);
-        flatRepository.save(flatEntity);
-        return flatEntity;
+        return flatRepository.save(flatEntity);
+    }
+
+    public void deleteById(Long id) {
+        flatRepository.deleteById(id);
     }
 
     private FlatEntity map(Flat flat) {

@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
-import Header from '../components/Header'
 import Button from '@mui/material/Button'
 import PageLayout from '../components/PageLayout'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 import SendIcon from '@mui/icons-material/Send'
-import Footer from '../components/Footer'
 import { Redirect } from 'react-router-dom'
 import Error from '../components/Error'
 import { useAuth } from '../auth/AuthProvider'
@@ -46,7 +44,6 @@ export default function Login() {
 
   return (
     <PageLayout>
-      <Header></Header>
       <Wrapper>
         <TextField
           required
@@ -76,14 +73,14 @@ export default function Login() {
         </Button>
       </Wrapper>
       {error && <Error>{error.message}</Error>}
-      <Footer></Footer>
     </PageLayout>
   )
 }
 
 const Wrapper = styled.div`
   display: grid;
-  place-items: center;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   grid-template-rows: 1fr 1fr 1fr;
 `

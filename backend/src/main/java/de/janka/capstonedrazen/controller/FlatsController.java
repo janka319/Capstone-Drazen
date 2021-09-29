@@ -2,11 +2,9 @@ package de.janka.capstonedrazen.controller;
 
 import de.janka.capstonedrazen.api.Flat;
 import de.janka.capstonedrazen.model.FlatEntity;
-import de.janka.capstonedrazen.model.UserEntity;
 import de.janka.capstonedrazen.service.FlatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,13 +30,19 @@ public class FlatsController {
     }
 
     @PostMapping("/publish")
-    public ResponseEntity<Flat> create(@AuthenticationPrincipal UserEntity authUser, @RequestBody Flat flat){
+    public ResponseEntity<Flat> create(@RequestBody Flat flat){
 
         FlatEntity createdFlatEntity = flatService.create(flat);
         Flat createdFlat = map(createdFlatEntity);
 
         return ok(createdFlat);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        flatService.deleteById(id);
+    }
+
 
 
 

@@ -1,6 +1,14 @@
 import styled from 'styled-components'
+import Background from '../components/Background.jpg'
 
 export default styled.div`
+  background-image: url(${Background});
+  background-size: cover;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-repeat: no-repeat;
+  background-position: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -9,5 +17,5 @@ export default styled.div`
   display: grid;
   grid-template-rows: min-content 1fr min-content;
   place-items: center;
-  background-color: dodgerblue;
+  background-color: rgb(141, 197, 199);
 `

@@ -1,7 +1,6 @@
 import PageLayout from '../components/PageLayout'
 import Header from '../components/Header'
 import Button from '@material-ui/core/Button'
-import Footer from '../components/Footer'
 import styled from 'styled-components'
 import TextField from '@material-ui/core/TextField'
 import SaveIcon from '@material-ui/icons/Save'
@@ -10,6 +9,7 @@ import { useState } from 'react'
 
 import { createUser } from '../services/user-api-service'
 import { useAuth } from '../auth/AuthProvider'
+import Navbar from '../components/Navbar'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -23,7 +23,7 @@ export default function AdminRegistration() {
   const classes = useStyles()
 
   const [credentials, setCredentials] = useState(initialState)
-  const { token } = useAuth()
+  const { token, user: admin } = useAuth()
   const [newPassword, setNewPassword] = useState('')
 
   const handleCredentialsChange = event => {
@@ -36,8 +36,10 @@ export default function AdminRegistration() {
 
   return (
     <PageLayout>
-      <Header>Welcome</Header>
-      <Wrapper>
+      <Header>
+        <Navbar user={admin} />
+      </Header>
+      <Wrapper onSubmit={handleSubmit}>
         <TextField
           required
           id="standard required"
@@ -57,12 +59,11 @@ export default function AdminRegistration() {
         </Button>
         <p>New Password:{newPassword}</p>
       </Wrapper>
-      <Footer></Footer>
     </PageLayout>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   display: grid;
   place-items: center;
   text-align: center;

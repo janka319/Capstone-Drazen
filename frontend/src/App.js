@@ -4,7 +4,7 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom'
-import Settings from './pages/Login'
+
 import AdminRegistration from './pages/AdminRegistration'
 import UserRegistration from './pages/UserRegistration'
 import Login from './pages/Login'
@@ -12,6 +12,8 @@ import Results from './pages/Results'
 import ProtectedRoute from './auth/ProtectedRoute'
 import AuthProvider from './auth/AuthProvider'
 import Publish from './pages/Publish'
+import Settings from './pages/Settings'
+import Logout from './pages/Logout'
 
 export default function App() {
   return (
@@ -22,6 +24,7 @@ export default function App() {
           <ProtectedRoute path="/results" component={Results} />
           <ProtectedRoute path="/publish" component={Publish} />
           <ProtectedRoute path="/settings" component={Settings} />
+          <ProtectedRoute path="/logout" component={Logout} />
           <ProtectedRoute
             path="/admin/registration"
             component={AdminRegistration}
