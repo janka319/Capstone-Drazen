@@ -10,6 +10,7 @@ export default styled.div`
   background-repeat: no-repeat;
   background-position: center;
   position: fixed;
+  overflow-x: scroll;
   top: 0;
   left: 0;
   width: 100%;

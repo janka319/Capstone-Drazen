@@ -57,11 +57,12 @@ export default function ApartmentCard({
 }
 const Wrapper = styled.div`
   width: min-content;
-  padding: 24px;
+  padding: 12px;
+  margin: 24px;
   text-align: center;
   border: 1px solid #333;
   border-radius: 12px;
   box-shadow: 1px 2px 8px #666;
-  background-color: RGB(216, 145, 139);
+  background-color: RGB(234, 222, 220);
   font-size: 16px;
 `
