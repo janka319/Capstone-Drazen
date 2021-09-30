@@ -39,9 +39,7 @@ export default function Publish() {
 
   const handleSubmit = event => {
     event.preventDefault()
-    createFlat(flat, token)
-      .then(setFlat)
-      .finally(() => setFlat(initialFlat))
+    createFlat(flat, token).finally(() => setFlat(initialFlat))
   }
 
   const clearFlat = () => setFlat(initialFlat)
