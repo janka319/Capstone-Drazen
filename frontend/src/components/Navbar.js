@@ -29,7 +29,7 @@ const Wrapper = styled.nav`
 
   a {
     flex-grow: 1;
-    margin: 0 var(--size-s);
+    margin: 0 var(--size-xs);
     text-align: center;
     text-decoration: none;
   }
