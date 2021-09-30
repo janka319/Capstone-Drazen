@@ -6,7 +6,7 @@ export default function Navbar({ user, ...props }) {
   return (
     <Wrapper {...props}>
       {user && <NavLink to="/logout">Logout</NavLink>}
-      {!user && <NavLink to="/login">Login</NavLink>}
+      {!user && <NavLink to="/user/registration">Sign in</NavLink>}
       {user && <NavLink to="/results">Results</NavLink>}
       {user && <NavLink to="/settings">Settings</NavLink>}
       {user && <NavLink to="/publish">Publish</NavLink>}

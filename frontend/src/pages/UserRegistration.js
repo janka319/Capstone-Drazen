@@ -1,7 +1,6 @@
 import PageLayout from '../components/PageLayout'
 import Header from '../components/Header'
 import Button from '@material-ui/core/Button'
-import Footer from '../components/Footer'
 import styled from 'styled-components'
 import TextField from '@material-ui/core/TextField'
 import SaveIcon from '@material-ui/icons/Save'
@@ -9,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 
 import { createUserAsUser } from '../services/user-api-service'
+import { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -18,9 +18,10 @@ const useStyles = makeStyles(theme => ({
 
 const initialState = { username: '', password: '', role: 'user' }
 
-export default function AdminRegistration() {
+export default function UserRegistration() {
   const classes = useStyles()
 
+  const [registeredUser, setRegisteredUser] = useState()
   const [credentials, setCredentials] = useState(initialState)
 
   const handleCredentialsChange = event => {
@@ -28,7 +29,14 @@ export default function AdminRegistration() {
   }
 
   const handleSubmit = event => {
-    createUserAsUser(credentials).then(dto => dto.password)
+    event.preventDefault()
+    createUserAsUser(credentials).then(registeredUser =>
+      setRegisteredUser(registeredUser)
+    )
+  }
+
+  if (registeredUser) {
+    return <Redirect to="/login" />
   }
 
   return (
@@ -62,7 +70,6 @@ export default function AdminRegistration() {
           Create user
         </Button>
       </Wrapper>
-      <Footer></Footer>
     </PageLayout>
   )
 }
